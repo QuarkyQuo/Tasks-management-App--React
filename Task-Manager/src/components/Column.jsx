@@ -20,12 +20,25 @@ function Column({colIndex}) {
       const boards = useSelector(state => state.boards);
       const board = boards.find(board => board.isActive===true);
       const col = board.columns.find((col, i) => i === colIndex);
-
+      const colLength=col.tasks?col.tasks.length:"0"
+      const handleOnDragOver =(e)=>{
+        e.preventDefault()
+      }
+      const handleOnDrop =(e)=>{
+        const {prevColIndex,prevTaskIndex}=JSON.parse(
+          e.dataTransfer.getData("text/drag-start")
+        )
+        if(colIndex!==prevColIndex&&colLength==0){
+          dispatch(boardsSlice.actions.dragTask({colIndex,prevColIndex,taskIndex:prevTaskIndex}))
+        }
+      }
       useEffect(() => {
         setColor(shuffle(colors).pop())
       }, [dispatch]);
   return (
     <div
+    onDrop={handleOnDrop}
+    onDragOver={handleOnDragOver}
     className='scrollbar-hide mx-5 pt-[90px] min-w-[280px]'
     >
         <p
