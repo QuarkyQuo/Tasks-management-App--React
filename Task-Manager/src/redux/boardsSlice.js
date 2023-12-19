@@ -73,6 +73,14 @@ const boardsSlice = createSlice({
             task.status=board.columns.find((col, i) => i === colIndex).name
             board.columns.find((col, i) => i === colIndex).tasks.push(task);
           },
+          dragOverTask: (state, action) => {
+            const { colIndex, prevColIndex, prevTaskIndex,newTaskIndex } = action.payload;
+            const board = state.find((board) => board.isActive);
+            const prevCol = board.columns.find((col, i) => i === prevColIndex);
+            const task = prevCol.tasks.splice(prevTaskIndex, 1)[0];
+            task.status=board.columns.find((col, i) => i === colIndex).name
+            board.columns.find((col, i) => i === colIndex).tasks.splice(newTaskIndex,0,task);
+          },
           setSubtaskCompleted: (state, action) => {
             const payload = action.payload;
             const board = state.find((board) => board.isActive);
